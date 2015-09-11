@@ -161,6 +161,51 @@ function! go#cmd#Test(bang, compile, ...)
     endif
 endfunction
 
+" Test runs `ginkgo` in the current directory. If compile is true, it'll
+" compile the tests instead of running them (useful to catch errors in the
+" test files). Any other argument is appendend to the final `go test` command
+function! go#cmd#Test(bang, compile, ...)
+    let command = "ginkgo "
+
+    " don't run the test, only compile it. Useful to capture and fix errors or
+    " to create a test binary.
+    if a:compile
+        let command .= "-c "
+    endif
+
+    if a:0
+        let command .= go#util#Shelljoin(map(copy(a:000), "expand(v:val)"))
+    endif
+
+    call go#cmd#autowrite()
+    if a:compile
+        echon "vim-go: " | echohl Identifier | echon "compiling tests ..." | echohl None
+    else
+        echon "vim-go: " | echohl Identifier | echon "testing ..." | echohl None
+    endif
+
+    redraw
+    let out = go#tool#ExecuteInDir(command)
+    if v:shell_error
+        call go#tool#ShowErrors(out)
+        cwindow
+        let errors = getqflist()
+        if !empty(errors) && !a:bang
+            cc 1 "jump to first error if there is any
+        endif
+        echon "vim-go: " | echohl ErrorMsg | echon "[test] FAIL" | echohl None
+    else
+        call setqflist([])
+        cwindow
+
+        if a:compile
+            echon "vim-go: " | echohl Function | echon "[test] SUCCESS" | echohl None
+        else
+            echon "vim-go: " | echohl Function | echon "[test] PASS" | echohl None
+        endif
+    endif
+endfunction
+
 " Testfunc runs a single test that surrounds the current cursor position.
 " Arguments are passed to the `go test` command.
 function! go#cmd#TestFunc(bang, ...)
