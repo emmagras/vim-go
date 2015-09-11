@@ -22,6 +22,7 @@ nnoremap <silent> <Plug>(go-install) :<C-u>call go#cmd#Install(!g:go_jump_to_err
 nnoremap <silent> <Plug>(go-test) :<C-u>call go#cmd#Test(!g:go_jump_to_error, 0)<CR>
 nnoremap <silent> <Plug>(go-test-func) :<C-u>call go#cmd#TestFunc(!g:go_jump_to_error)<CR>
 nnoremap <silent> <Plug>(go-test-compile) :<C-u>call go#cmd#Test(!g:go_jump_to_error, 1)<CR>
+nnoremap <silent> <Plug>(go-ginkgo) :<C-u>call go#cmd#Ginkgo(!g:go_jump_to_error, 0)<CR>
 nnoremap <silent> <Plug>(go-coverage) :<C-u>call go#cmd#Coverage(!g:go_jump_to_error)<CR>
 nnoremap <silent> <Plug>(go-vet) :<C-u>call go#cmd#Vet(!g:go_jump_to_error)<CR>
 
@@ -81,6 +82,7 @@ command! -nargs=* -bang GoInstall call go#cmd#Install(<bang>0, <f-args>)
 command! -nargs=* -bang GoTest call go#cmd#Test(<bang>0, 0, <f-args>)
 command! -nargs=* -bang GoTestFunc call go#cmd#TestFunc(<bang>0, <f-args>)
 command! -nargs=* -bang GoTestCompile call go#cmd#Test(<bang>0, 1, <f-args>)
+command! -nargs=* -bang GoGinkgo call go#cmd#Ginkgo(<bang>0 <f-args>)
 command! -nargs=* -bang GoCoverage call go#cmd#Coverage(<bang>0, <f-args>)
 command! -nargs=* -bang GoVet call go#cmd#Vet(<bang>0, <f-args>)
 
